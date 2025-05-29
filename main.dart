@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -7,17 +8,46 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'BMI APP'),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const MyHomePage(title: 'BMI APP')));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor:Colors.blue,
+      body: Center(
+        child: Text(
+          'Welcome to BMI App',
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 }
@@ -30,14 +60,13 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
 
   var wtContorller = TextEditingController();
   var ftContorller = TextEditingController();
   var inContorller = TextEditingController();
   var result ="";
-
+  Color bgColor = Colors.white;
   @override
   Widget build(BuildContext context) {
 
@@ -47,16 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-            Color(0xfffa709a),Color(0xfffee140),Color(0xffffecd2)
-            ],
-            begin: FractionalOffset(0.0,0.5),
-              end: FractionalOffset(1.0,0.5),
-            stops: [0.0,0.4,1.0]
-          )
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     colors: [
+        //     Color(0xfffa709a),Color(0xfffee140),Color(0xffffecd2)
+        //     ],
+        //     begin: FractionalOffset(0.0,0.5),
+        //       end: FractionalOffset(1.0,0.5),
+        //     stops: [0.0,0.4,1.0]
+        //   )
+        // ),
+        color: bgColor,
       child:Center(
         child:Container(
     width: 300,
@@ -117,20 +147,22 @@ class _MyHomePageState extends State<MyHomePage> {
                var bmi =iWt/(tM*tM);
 
                var msg ="";
+
+               Color newcolor;
                if(bmi>25){
                 msg = 'your weight is overrated';
-                Colors.orange.shade100;
+                newcolor = Colors.orange.shade100;
                }else if(bmi<18){
                 msg = 'your weight is underrated';
-                Colors.blue.shade100;
+                newcolor = Colors.blue.shade100;
                }else{
                  msg= 'you are healthy';
-                 Colors.grey.shade300;
-
+                 newcolor = Colors.grey.shade300;
                }
 
                setState(() {
                  result=" $msg \n your bmi is: ${bmi.toStringAsFixed(4)}";
+                 bgColor = newcolor;
                });
 
             }else{
@@ -138,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
               result="please fill the blanks";
               });
             }
-
-
 
           },
               child: Text('calculator')),
